@@ -16,6 +16,16 @@ export const profile = {
   ],
 };
 
+export const contactPanel = {
+  availability: "Open to Senior Software Engineer and Team Lead opportunities.",
+  workPreferences: "Available for remote, hybrid, or relocation-friendly roles across product teams.",
+  focusAreas: [
+    "Scalable full-stack architecture and delivery",
+    "Product engineering with measurable business impact",
+    "Technical leadership, mentoring, and code quality",
+  ],
+};
+
 export const navLinks = [
   { label: "Experience", href: "#experience" },
   { label: "Work", href: "#work" },

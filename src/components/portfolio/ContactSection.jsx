@@ -1,36 +1,9 @@
-import { useState } from "react";
-import axios from "axios";
-import { Send } from "lucide-react";
-import { toast } from "sonner";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import { Textarea } from "../ui/textarea";
-import { profile } from "../../data/portfolioData";
+import { ArrowUpRight, CheckCircle2, Download, Mail } from "lucide-react";
+import { contactPanel, profile } from "../../data/portfolioData";
 import { SectionHeading } from "./SectionHeading";
 
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
-
 export const ContactSection = () => {
-  const [form, setForm] = useState({ name: "", email: "", message: "" });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const updateField = (field, value) => {
-    setForm((current) => ({ ...current, [field]: value }));
-  };
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    setIsSubmitting(true);
-    try {
-      await axios.post(`${API}/contact`, form);
-      toast.success("Message saved. Thu will be able to review it soon.");
-      setForm({ name: "", email: "", message: "" });
-    } catch (error) {
-      toast.error(error?.response?.data?.detail || "Message could not be sent. Please email Thu directly.");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  const introCallMailto = `mailto:${profile.email}?subject=${encodeURIComponent("Intro Call - Senior Software Engineer Opportunity")}`;
 
   return (
     <section id="contact" className="px-5 py-24 sm:px-8 lg:px-10 lg:py-32" data-testid="contact-section">
@@ -39,7 +12,7 @@ export const ContactSection = () => {
           <SectionHeading
             eyebrow="Contact"
             title="Let’s build something extraordinary."
-            description="For senior software engineering roles, product teams, and technical leadership conversations, send a message here or reach out directly."
+            description="For senior software engineering roles, product teams, and technical leadership conversations, reach out directly."
             testId="contact"
           />
           <div className="space-y-4" data-testid="contact-direct-links">
@@ -51,57 +24,67 @@ export const ContactSection = () => {
             </a>
           </div>
         </div>
-        <form className="glass-card p-6 sm:p-8" onSubmit={handleSubmit} data-testid="contact-form">
-          <div className="grid gap-5 sm:grid-cols-2">
-            <label className="space-y-2" data-testid="contact-name-field-wrap">
-              <span className="font-mono text-xs uppercase tracking-[0.22em] text-white/45" data-testid="contact-name-label">Name</span>
-              <Input
-                required
-                minLength={2}
-                value={form.name}
-                onChange={(event) => updateField("name", event.target.value)}
-                placeholder="Your name"
-                className="h-12 rounded-none border-white/10 bg-black/30 text-white placeholder:text-white/25 focus-visible:ring-white/40"
-                data-testid="contact-name-input"
-              />
-            </label>
-            <label className="space-y-2" data-testid="contact-email-field-wrap">
-              <span className="font-mono text-xs uppercase tracking-[0.22em] text-white/45" data-testid="contact-email-label">Email</span>
-              <Input
-                required
-                type="email"
-                value={form.email}
-                onChange={(event) => updateField("email", event.target.value)}
-                placeholder="you@company.com"
-                className="h-12 rounded-none border-white/10 bg-black/30 text-white placeholder:text-white/25 focus-visible:ring-white/40"
-                data-testid="contact-email-input"
-              />
-            </label>
-          </div>
-          <label className="mt-5 block space-y-2" data-testid="contact-message-field-wrap">
-            <span className="font-mono text-xs uppercase tracking-[0.22em] text-white/45" data-testid="contact-message-label">Message</span>
-            <Textarea
-              required
-              minLength={10}
-              value={form.message}
-              onChange={(event) => updateField("message", event.target.value)}
-              placeholder="Tell Thu about the role, team, or product challenge."
-              className="min-h-44 rounded-none border-white/10 bg-black/30 text-white placeholder:text-white/25 focus-visible:ring-white/40"
-              data-testid="contact-message-textarea"
-            />
-          </label>
-          <Button
-            type="submit"
-            disabled={isSubmitting}
-            className="mt-7 h-14 w-full rounded-none bg-white font-mono text-xs uppercase tracking-[0.24em] text-black transition-transform duration-300 hover:-translate-y-1 hover:bg-white disabled:translate-y-0"
-            data-testid="contact-submit-button"
-          >
-            {isSubmitting ? "Sending..." : "Send Message"} <Send className="h-4 w-4" aria-hidden="true" />
-          </Button>
-          <p className="mt-5 text-center text-xs leading-6 text-white/35" data-testid="contact-form-helper-text">
-            Messages are securely stored for portfolio inquiries.
+        <aside className="glass-card p-6 sm:p-8" data-testid="contact-collaboration-panel">
+          <p className="inline-flex items-center gap-2 rounded-full border border-emerald-400/35 bg-emerald-400/10 px-3 py-1 font-mono text-[11px] uppercase tracking-[0.2em] text-emerald-300" data-testid="contact-availability-badge">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-300" aria-hidden="true" />
+            Available
           </p>
-        </form>
+
+          <h3 className="mt-5 text-2xl font-semibold text-white sm:text-3xl" data-testid="contact-panel-title">
+            Ways to work together
+          </h3>
+          <p className="mt-3 text-sm leading-7 text-white/65" data-testid="contact-panel-availability">
+            {contactPanel.availability}
+          </p>
+          <p className="mt-2 text-sm leading-7 text-white/50" data-testid="contact-panel-preferences">
+            {contactPanel.workPreferences}
+          </p>
+
+          <div className="mt-7 grid gap-3 sm:grid-cols-2" data-testid="contact-cta-grid">
+            <a
+              href={introCallMailto}
+              className="inline-flex h-12 items-center justify-center gap-2 rounded-none border border-white/20 bg-white px-4 font-mono text-[11px] uppercase tracking-[0.2em] text-black transition-transform duration-300 hover:-translate-y-0.5"
+              data-testid="contact-cta-intro-call"
+            >
+              <Mail className="h-4 w-4" aria-hidden="true" />
+              Book Intro Call
+            </a>
+            <a
+              href={profile.cvUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex h-12 items-center justify-center gap-2 rounded-none border border-white/20 px-4 font-mono text-[11px] uppercase tracking-[0.2em] text-white transition-colors duration-300 hover:bg-white hover:text-black"
+              data-testid="contact-cta-resume"
+            >
+              <Download className="h-4 w-4" aria-hidden="true" />
+              Download Resume
+            </a>
+          </div>
+
+          <ul className="mt-7 space-y-3 border-t border-white/10 pt-6 text-sm text-white/70" data-testid="contact-focus-areas">
+            {contactPanel.focusAreas.map((area) => (
+              <li key={area} className="flex items-start gap-3">
+                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-white/70" aria-hidden="true" />
+                <span>{area}</span>
+              </li>
+            ))}
+          </ul>
+
+          <div className="mt-7 flex flex-wrap gap-3 border-t border-white/10 pt-6" data-testid="contact-social-links">
+            {profile.social.map((item) => (
+              <a
+                key={item.label}
+                href={item.href}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 border border-white/15 px-3 py-2 font-mono text-[11px] uppercase tracking-[0.18em] text-white/70 transition-colors duration-300 hover:border-white hover:bg-white hover:text-black"
+              >
+                {item.label}
+                <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
+              </a>
+            ))}
+          </div>
+        </aside>
       </div>
     </section>
   );
